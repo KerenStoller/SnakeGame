@@ -292,6 +292,7 @@ MonoBehaviour:
   _levelWidth: 10
   _levelHeight: 10
   _startingLocation: {x: 0, y: 0, z: 0}
+  _fruit: {fileID: 256315648854458335, guid: 17ec62c9c874b46289467c27196e0c8c, type: 3}
 --- !u!4 &1457745870
 Transform:
   m_ObjectHideFlags: 0
@@ -319,7 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d96f62790b5c94dd0808a3f96234bf33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeToMove: 0.4
+  _timeToMove: 0.2
 --- !u!114 &1457745872
 MonoBehaviour:
   m_ObjectHideFlags: 0

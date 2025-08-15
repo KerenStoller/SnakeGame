@@ -1,4 +1,3 @@
-using System.Drawing;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,15 +48,43 @@ public class FarmDance : MonoBehaviour
 
         //TODO
         // check if new position is not: 
-        // 1. a wall (farm fence)
-        // 2. another animal
-        // OnGameOver()?.Invoke();
-        // 3. fruit
-        // OnEatingFruit()?.Invoke();
-        // AddAnimalToFarmDance(newPosition);
-        // for this, I need to add collisions
-        // else:
+
+        if (IsAWall(newPosition) || IsAnAnimal(newPosition))
+        {
+            Debug.Log("Game Over! You hit a wall or another animal.");
+            // Trigger game over event
+            OnGameOver?.Invoke();
+            return;
+        }
+
+        if (IsAFruit(newPosition))
+        {
+            OnEatingFruit?.Invoke();
+            AddAnimalToFarmDance(newPosition);
+            return;
+        }
+        
+        // If the new position is valid, move the last animal to the new position
         MoveLastAnimalToNewPosition(newPosition);
+    }
+    
+    public bool IsAnAnimal(Vector3 position)
+    {
+        return _farmAnimals.Any(part => 
+            Vector3.Distance(part.transform.position, position) < 0.1f);
+    }
+
+    private bool IsAWall(Vector3 position)
+    {
+        return position.y >= GameLogic.Instance._levelHeight -2 || 
+               position.y < 0 ||
+               position.x >= GameLogic.Instance._levelWidth -2 ||
+               position.x < 0;
+    }
+
+    private bool IsAFruit(Vector3 position)
+    {
+        return (Vector3.Distance(GameLogic.Instance._fruit.transform.position, position) < 0.1f);
     }
 
     void MoveLastAnimalToNewPosition(Vector3 newPosition)

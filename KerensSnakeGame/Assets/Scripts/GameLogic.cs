@@ -1,19 +1,19 @@
-using System;
 using DefaultNamespace;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class GameLogic : MonoBehaviour
 {
     public static GameLogic Instance;
     [SerializeField] private GameObject _food;
     [SerializeField] private GameObject _farmFence;
-    [SerializeField] private int _levelWidth = 10;
-    [SerializeField] private int _levelHeight = 10;
+    [SerializeField] public int _levelWidth = 10;
+    [SerializeField] public int _levelHeight = 10;
     
     [SerializeField] private Vector3 _startingLocation = new Vector3(0, 0, 0);
     public GameState _gameState { get; private set; } = GameState.NotStarted;
-    private GameObject _fruit;
+    public GameObject _fruit;
+    
+    private int _foodCount;
 
     private void Awake()
     {
@@ -30,15 +30,16 @@ public class GameLogic : MonoBehaviour
 
     private void Start()
     {
-        buildLevel();
+        BuildLevel();
         PlayerController.Instance.OnPlayerInput += OnPlayerInput;
+        FarmDance.Instance.AddAnimalToFarmDance(_startingLocation);
         FarmDance.Instance.OnEatingFruit += OnEatingFruit;
         FarmDance.Instance.OnGameOver += OnGameOver;
-        FarmDance.Instance.AddAnimalToFarmDance(_startingLocation);
         SpawnFruit();
+        _foodCount = 0;
     }
     
-    private void buildLevel()
+    private void BuildLevel()
     {
         Debug.Log("Building level with width: " + _levelWidth + " and height: " + _levelHeight);
         for (int i = -1; i < _levelWidth - 1; i++)
@@ -61,8 +62,10 @@ public class GameLogic : MonoBehaviour
 
     void OnEatingFruit()
     {
-        //TODO
-        // raise score
+        Debug.Log("Eating fruit!");
+        Destroy(_fruit);
+        SpawnFruit();
+        _foodCount++;
     }
     
     void OnGameOver()
@@ -75,17 +78,29 @@ public class GameLogic : MonoBehaviour
 
     private void SpawnFruit()
     {
-        Instantiate(_food, getRandomFruitPosition(), Quaternion.identity);
+        _fruit = Instantiate(_food, GetRandomFruitPosition(), Quaternion.identity);
     }
 
-    private Vector3 getRandomFruitPosition()
-    {
-        //TODO
-        // Here we make sure the fruit can spawn anywhere in the level except the walls (farm fence)
-        // We need to add collisions to avoid the area where the farm animals are dancing
-        // and the area where the fruit is already spawned
-        float newX = UnityEngine.Random.Range(0, _levelWidth - 2);
-        float newY = UnityEngine.Random.Range(0, _levelHeight - 2);
-        return new Vector3(newX, newY, 0);
+    private Vector3 GetRandomFruitPosition()
+    {        
+        if (_foodCount >= 5)
+        {
+            Debug.Log("Max food count reached, no more fruit will spawn.");
+            return Vector3.zero; // or handle as needed
+        }
+        
+        float newX = Random.Range(0, _levelWidth - 2);
+        float newY = Random.Range(0, _levelHeight - 2);
+        
+        Vector3 suggestedPosition = new Vector3(newX, newY, 0);
+        
+        if (FarmDance.Instance.IsAnAnimal(suggestedPosition))
+        {
+            // this won't cause a loop since we have the food count limit
+            return GetRandomFruitPosition();
+        }
+        
+        
+        return suggestedPosition;
     }
 }

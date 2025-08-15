@@ -8,9 +8,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _timeToMove = 0.5f;
     
     public event System.Action OnPlayerInput;
-    
-    private Vector3? _direction = null;
-    private float _moveCountdown = 0;
+
+    private Vector3? _direction;
+    private float _moveCountdown;
     
     void Awake()
     {
@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
     
     void HandleInput()
     {
-        if (Input.anyKeyDown)
+        if (Input.anyKeyDown && GameLogic.Instance._gameState != GameState.GameOver)
         {
             OnPlayerInput?.Invoke();
         }
@@ -57,19 +57,19 @@ public class PlayerController : MonoBehaviour
             return;
         }
         
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S) && _direction != Vector3.up)
         {
             _direction = Vector3.down;
         }
-        else if (Input.GetKeyDown(KeyCode.W))
+        else if (Input.GetKeyDown(KeyCode.W) && _direction != Vector3.down)
         {
             _direction = Vector3.up;
         }
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (Input.GetKeyDown(KeyCode.A) && _direction != Vector3.right)
         {
             _direction = Vector3.left;
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.D) && _direction != Vector3.left)
         {
             _direction = Vector3.right;
         }
