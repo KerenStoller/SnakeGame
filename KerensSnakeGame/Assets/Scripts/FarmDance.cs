@@ -7,8 +7,9 @@ public class FarmDance : MonoBehaviour
 {
     public static FarmDance Instance;
     [SerializeField] private GameObject _farmChicken;
+    //TODO
+    //add different animals to the dance
     //[SerializeField] private GameObject _farmAnimal2;
-    [SerializeField] private Vector3 _startingLocation = new Vector3(0, 0, 0);
     
     private List<GameObject> _farmAnimals = new List<GameObject>();
     
@@ -28,10 +29,11 @@ public class FarmDance : MonoBehaviour
         }
     }
 
-    public void CreateFarmDance()
+    public void AddAnimalToFarmDance(Vector3 location)
     {
-        GameObject animal = Instantiate(_farmChicken ,_startingLocation, Quaternion.identity);
-        _farmAnimals.Add(animal);
+        GameObject animal = Instantiate(_farmChicken ,location, Quaternion.identity);
+        _farmAnimals.Insert(0, animal);
+        Debug.Log("added animal! Current count: " + _farmAnimals.Count);
     }
 
     public void Dance(Vector3 direction)
@@ -42,33 +44,35 @@ public class FarmDance : MonoBehaviour
             Debug.LogWarning("No farm animals to move.");
             return;
         }
-
-        GameObject animalToMove = _farmAnimals[0];
-        if (_farmAnimals.Count > 1)
-        {
-            animalToMove = _farmAnimals.FindLast(GameObject => GameObject != null);
-        }
         
-        
-        moveAnimal(animalToMove, _farmAnimals[0].transform.position + direction);
-    }
+        Vector3 newPosition = _farmAnimals[0].transform.position + direction;
 
-    void moveAnimal(GameObject animalToMove, Vector3 location)
-    {
-        // check if next position is not: 
+        //TODO
+        // check if new position is not: 
         // 1. a wall (farm fence)
         // 2. another animal
         // OnGameOver()?.Invoke();
         // 3. fruit
         // OnEatingFruit()?.Invoke();
-        // addAnimalToDance(location);
+        // AddAnimalToFarmDance(newPosition);
         // for this, I need to add collisions
         // else:
-        animalToMove.transform.position = location;
+        MoveLastAnimalToNewPosition(newPosition);
     }
 
-    void addAnimalToDance(Vector3 location)
+    void MoveLastAnimalToNewPosition(Vector3 newPosition)
     {
+        if (_farmAnimals.Count == 0)
+        {
+            Debug.LogWarning("No farm animals to remove.");
+            return;
+        }
         
+        int lastIndex = _farmAnimals.Count - 1;
+        GameObject lastAnimal = _farmAnimals[lastIndex];
+        _farmAnimals.RemoveAt(lastIndex);
+        
+        lastAnimal.transform.position = newPosition;
+        _farmAnimals.Insert(0, lastAnimal);
     }
 }

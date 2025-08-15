@@ -10,6 +10,8 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private GameObject _farmFence;
     [SerializeField] private int _levelWidth = 10;
     [SerializeField] private int _levelHeight = 10;
+    
+    [SerializeField] private Vector3 _startingLocation = new Vector3(0, 0, 0);
     public GameState _gameState { get; private set; } = GameState.NotStarted;
     private GameObject _fruit;
 
@@ -24,7 +26,6 @@ public class GameLogic : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        Start();
     }
 
     private void Start()
@@ -33,7 +34,7 @@ public class GameLogic : MonoBehaviour
         PlayerController.Instance.OnPlayerInput += OnPlayerInput;
         FarmDance.Instance.OnEatingFruit += OnEatingFruit;
         FarmDance.Instance.OnGameOver += OnGameOver;
-        FarmDance.Instance.CreateFarmDance();
+        FarmDance.Instance.AddAnimalToFarmDance(_startingLocation);
         SpawnFruit();
     }
     
@@ -60,20 +61,16 @@ public class GameLogic : MonoBehaviour
 
     void OnEatingFruit()
     {
+        //TODO
         // raise score
     }
     
     void OnGameOver()
     {
         _gameState = GameState.GameOver;
+        //TODO
         // show game over screen
         Debug.Log("Game Over!");
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        
     }
 
     private void SpawnFruit()
@@ -83,6 +80,7 @@ public class GameLogic : MonoBehaviour
 
     private Vector3 getRandomFruitPosition()
     {
+        //TODO
         // Here we make sure the fruit can spawn anywhere in the level except the walls (farm fence)
         // We need to add collisions to avoid the area where the farm animals are dancing
         // and the area where the fruit is already spawned
