@@ -119,11 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &181027857 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9024956426209707758, guid: 9cbf64328d0e04abc8646e46a6ae402b, type: 3}
-  m_PrefabInstance: {fileID: 1469575371066006864}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,6 +267,7 @@ GameObject:
   - component: {fileID: 1457745870}
   - component: {fileID: 1457745869}
   - component: {fileID: 1457745871}
+  - component: {fileID: 1457745872}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -322,8 +318,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d96f62790b5c94dd0808a3f96234bf33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _FarmAnimal: {fileID: 181027857}
-  _timeToMove: 0.5
+  _timeToMove: 0.4
+--- !u!114 &1457745872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1457745868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 200c42f6e6c04cf0a7b7d4c4e1f15321, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _farmChicken: {fileID: 9024956426209707758, guid: 9cbf64328d0e04abc8646e46a6ae402b, type: 3}
+  _startingLocation: {x: 5, y: 5, z: 0}
 --- !u!1001 &1469575371066006864
 PrefabInstance:
   m_ObjectHideFlags: 0

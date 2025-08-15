@@ -1,33 +1,40 @@
+using DefaultNamespace;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private GameObject _FarmAnimal;
+    public static PlayerController Instance;
     [Header("Movement Settings")]
     [SerializeField] private float _timeToMove = 0.5f;
+    
+    public event System.Action OnPlayerInput;
     
     private Vector3? _direction = null;
     private float _moveCountdown = 0;
     
-
+    void Awake()
+    {
+        if (!Instance)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.S))
+        HandleInput();
+
+        if (GameLogic.Instance._gameState == GameState.NotStarted || 
+            GameLogic.Instance._gameState == GameState.GameOver)
         {
-            _direction = Vector3.down;
-        }
-        else if (Input.GetKey(KeyCode.W))
-        {
-            _direction = Vector3.up;
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            _direction = Vector3.left;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            _direction = Vector3.right;
+            // If the game is not started or is over, do nothing
+            return;
         }
         
         _moveCountdown += Time.deltaTime;
@@ -39,18 +46,40 @@ public class PlayerController : MonoBehaviour
         }
     }
     
+    void HandleInput()
+    {
+        if (Input.anyKeyDown)
+        {
+            OnPlayerInput?.Invoke();
+        }
+        else
+        {
+            return;
+        }
+        
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            _direction = Vector3.down;
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {
+            _direction = Vector3.up;
+        }
+        else if (Input.GetKeyDown(KeyCode.A))
+        {
+            _direction = Vector3.left;
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            _direction = Vector3.right;
+        }
+    }
+    
     void MoveFarmAnimal()
     {
         if (_direction.HasValue)
         {
-            _FarmAnimal.transform.position += _direction.Value;
+            FarmDance.Instance.Dance(_direction.Value);
         }
-        /*
-        if (_direction.HasValue)
-        {
-            Vector3 newPosition = transform.position + _direction.Value;
-            Instantiate(_FarmAnimal, newPosition, Quaternion.identity);
-            _direction = null; // Reset direction after moving
-        }*/
     }
 }
